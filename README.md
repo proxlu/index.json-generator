@@ -4,7 +4,7 @@ Gerador de arquivo index.json para projetos easyrpg webplayer. / index.json file
 ### Como usar / How to use
 ```
 cd player-js/games/my_game
-git clone https://github.com/proxlu/index.json-generator.git
+wget https://raw.githubusercontent.com/proxlu/index.json-generator/refs/heads/main/generator.py
 python ./generator.py
 ```
 
