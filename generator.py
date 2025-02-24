@@ -2,11 +2,13 @@ import os
 import json
 from datetime import datetime
 
-def load_existing_index(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {
+def generate_index():
+    base_dir = os.getcwd()
+    index_file = os.path.join(base_dir, "index.json")
+    script_name = os.path.basename(__file__).lower()
+    
+    # Definindo o conteúdo do novo index.json
+    index_data = {
         "cache": {
             "backdrop": {"_dirname": "Backdrop", "backdrop": "backdrop.png"},
             "battle": {"_dirname": "Battle"},
@@ -33,13 +35,8 @@ def load_existing_index(file_path):
         },
         "metadata": {"date": datetime.now().strftime("%Y-%m-%d"), "version": 2}
     }
-
-def generate_index():
-    base_dir = os.getcwd()
-    index_file = os.path.join(base_dir, "index.json")
-    script_name = os.path.basename(__file__).lower()
-    index_data = load_existing_index(index_file)
     
+    # Criando o cache de arquivos
     existing_cache = index_data.get("cache", {})
     
     for root, _, files in os.walk(base_dir):
@@ -62,13 +59,15 @@ def generate_index():
             if name_without_ext not in existing_cache[dir_key]:
                 existing_cache[dir_key][name_without_ext] = file
     
+    # Atualizando o cache
     index_data["cache"] = existing_cache
     index_data["metadata"]["date"] = datetime.now().strftime("%Y-%m-%d")
     
+    # Criando um novo arquivo index.json
     with open(index_file, "w", encoding="utf-8") as f:
         json.dump(index_data, f, separators=(',', ':'), ensure_ascii=False, sort_keys=False)
     
-    print("Arquivo index.json atualizado com sucesso!")
+    print("Arquivo index.json criado com sucesso!")
 
 if __name__ == "__main__":
     generate_index()
